@@ -66,7 +66,7 @@ contract("SimpleBank", function (accounts) {
     assert.equal(
       deposit.toString(),
       balance,
-      "deposit amount incorrect, check deposit method",
+      "deposit amount incorrect, check deposit method deposit:",
     );
   });
 
