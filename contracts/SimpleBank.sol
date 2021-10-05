@@ -37,7 +37,13 @@ contract SimpleBank {
     // Create an event called LogWithdrawal
     // Hint: it should take 3 arguments: an accountAddress, withdrawAmount and a newBalance 
     event LogWithdrawal();
-
+    
+    /* Modifiers
+     */
+    modifier onlyEnrolled {
+      require(enrolled[msg.sender]);
+      _;
+    }
     /* Functions
      */
 
@@ -74,11 +80,13 @@ contract SimpleBank {
 
     /// @notice Deposit ether into bank
     /// @return The balance of the user after the deposit is made
-    function deposit() public payable returns (uint) {
+    function deposit() public onlyEnrolled payable returns (uint) {
       // 1. Add the appropriate keyword so that this function can receive ether
         //payable
       // 2. Users should be enrolled before they can make deposits
-      require(enrolled[msg.sender], "Sender is not Enrolled!!");
+        // this is one option with the require statement
+        // also changed to use a modifier onlyEnrolled
+      //require(enrolled[msg.sender], "Sender is not Enrolled!!");
       // 3. Add the amount to the user's balance. Hint: the amount can be
       //    accessed from of the global variable `msg`
       balances[msg.sender] += msg.value;
