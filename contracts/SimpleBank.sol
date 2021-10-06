@@ -36,7 +36,7 @@ contract SimpleBank {
 
     // Create an event called LogWithdrawal
     // Hint: it should take 3 arguments: an accountAddress, withdrawAmount and a newBalance 
-    event LogWithdrawal();
+    event LogWithdrawal(address indexed accountAddress, uint withdrawAmount, uint newBalance);
     
     /* Modifiers
      */
@@ -110,10 +110,21 @@ contract SimpleBank {
       // return the user's balance.
 
       // 1. Use a require expression to guard/ensure sender has enough funds
-
+      require(balances[msg.sender] >= withdrawAmount, "Insufficient Funds!!");
       // 2. Transfer Eth to the sender and decrement the withdrawal amount from
       //    sender's balance
+      // below is the correct way to send, but not compatible with used version of solidity :)
+      //(bool sent, bytes memory data) = msg.sender.call{value: withdrawAmount}("");
+
+      bool sent = msg.sender.send(withdrawAmount);
+      require(sent, "Failed to send ETH!!");
+
+      balances[msg.sender] -= withdrawAmount;
 
       // 3. Emit the appropriate event for this message
+
+      emit LogWithdrawal(msg.sender, withdrawAmount, balances[msg.sender]);
+
+      return(balances[msg.sender]);
     }
 }
